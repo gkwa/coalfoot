@@ -1,0 +1,7 @@
+* coalfoot
+
+This is a description of my coalfoot.
+
+** Usage
+
+To use my project, run this command: myproject
