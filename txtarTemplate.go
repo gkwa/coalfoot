@@ -46,8 +46,9 @@ func (tpl TxtarTemplate) GetUnRenderedTemplateDir() string {
 }
 
 func (tpl TxtarTemplate) FetchFromRemoteIfOld() {
-	if mymazda.FileExists(tpl.LocalPathUnrendered) && durationSinceFileCreated(tpl.LocalPathUnrendered) < 24*time.Hour {
-		slog.Debug("skipped fetching file", "url", tpl.RemoteURL, "path", tpl.LocalPathUnrendered)
+	threshold := 24 * time.Hour
+	if mymazda.FileExists(tpl.LocalPathUnrendered) && durationSinceFileCreated(tpl.LocalPathUnrendered) < threshold {
+		slog.Debug("skipped fetching file", "url", tpl.RemoteURL, "path", tpl.LocalPathUnrendered, "age threshold", threshold)
 		return
 	}
 
