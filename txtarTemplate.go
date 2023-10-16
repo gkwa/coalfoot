@@ -10,6 +10,7 @@ import (
 	"time"
 
 	mymazda "github.com/taylormonacelli/forestfish/mymazda"
+	"golang.org/x/tools/txtar"
 )
 
 type TxtarTemplate struct {
@@ -52,6 +53,51 @@ func (tpl TxtarTemplate) FetchFromRemoteIfOld() {
 
 	slog.Debug("fetching", "url", tpl.RemoteURL, "path", tpl.LocalPathUnrendered)
 	tpl.FetchRemoteToLocal()
+}
+
+func (tpl TxtarTemplate) Extract(extractToDir string) error {
+	txtarPath := tpl.LocalPathRendered
+	archive, err := txtar.ParseFile(txtarPath)
+	if err != nil {
+		slog.Error("parsing txtar", "txtarpath", txtarPath, "error", err.Error())
+		return err
+	}
+
+	// abort early if file exists to prevent overwriting files
+	for _, file := range archive.Files {
+		filePath := filepath.Join(extractToDir, file.Name)
+
+		if mymazda.FileExists(filePath) {
+			return fmt.Errorf("file %s exists already, aborting", filePath)
+		}
+
+		if mymazda.DirExists(filePath) {
+			return fmt.Errorf("directory %s exists already, aborting", filePath)
+		}
+	}
+
+	for _, file := range archive.Files {
+		filePath := filepath.Join(extractToDir, file.Name)
+
+		d := filepath.Dir(filePath)
+
+		os.MkdirAll(d, os.ModePerm)
+
+		f, err := os.Create(filePath)
+		if err != nil {
+			slog.Error("error creating file", "path", filePath, "error", err.Error())
+			return err
+		}
+		defer f.Close()
+
+		_, err = io.WriteString(f, string(file.Data))
+		if err != nil {
+			slog.Error("error wrting data", "path", filePath, "error", err.Error())
+			return err
+		}
+	}
+
+	return nil
 }
 
 func durationSinceFileCreated(filePath string) time.Duration {

@@ -5,6 +5,7 @@ GO_FILES := $(shell find . -name "*.go")
 GO_DEPS := $(shell find . -name go.mod -o -name go.sum)
 
 $(BIN): $(GO_FILES) $(GO_DEPS)
+	go vet ./...
 	$(MAKE) pretty
 	go build -o $(BIN) cmd/main.go
 
@@ -24,4 +25,5 @@ $(GOPATH)/bin/$(BIN): $(BIN)
 
 clean:
 	rm -f $(BIN)
+	rm -rf tmp
 .PHONY: clean

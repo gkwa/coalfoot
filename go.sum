@@ -2,3 +2,5 @@ github.com/taylormonacelli/forestfish v0.0.9 h1:EHEkImUR5X/u7OpOSx4M9t51btRABjz0
 github.com/taylormonacelli/forestfish v0.0.9/go.mod h1:8Xio8qE+Hc/cthG+dNVLakh5qYHl05Sq5vS8XzU62sA=
 github.com/taylormonacelli/goldbug v0.0.6 h1:2NQnMjAfznHkKh8dKPTUHJqnswgqWrcF/NhOnm4TQRI=
 github.com/taylormonacelli/goldbug v0.0.6/go.mod h1:RmeCuiI1RYYPob+BPHEZcmp+IVd6EkoHsoRukenJmH0=
+golang.org/x/tools v0.14.0 h1:jvNa2pY0M4r62jkRQ6RwEZZyPcymeL9XZMLBbV7U2nc=
+golang.org/x/tools v0.14.0/go.mod h1:uYBEerGOWcJyEORxN+Ek8+TT266gXkNlHdJBwexUsBg=

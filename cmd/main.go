@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"log/slog"
+	"os"
 
 	"github.com/taylormonacelli/coalfoot"
 	"github.com/taylormonacelli/goldbug"
@@ -29,5 +30,6 @@ func main() {
 		}
 	}
 
-	coalfoot.Main()
+	code := coalfoot.Main()
+	os.Exit(code)
 }
