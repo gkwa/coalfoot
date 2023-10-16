@@ -61,7 +61,7 @@ func durationSinceFileCreated(filePath string) time.Duration {
 		return 0
 	}
 
-	durationSince := time.Since(fileInfo.ModTime())
+	durationSince := time.Since(fileInfo.ModTime()).Truncate(time.Second)
 
 	slog.Debug("duration since file was modified", "path", filePath, "duration", durationSince)
 
