@@ -3,11 +3,10 @@ package coalfoot
 import (
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
-
-	"log/slog"
 
 	mymazda "github.com/taylormonacelli/forestfish/mymazda"
 )
@@ -58,52 +57,55 @@ func (tpl TxtarTemplate) FetchRemoteToLocal() error {
 		return err
 	}
 
-	err = os.MkdirAll(dir, 0755)
+	err = os.MkdirAll(dir, 0o755)
 	if err != nil {
 		slog.Error("coalfoot mkdir", "mkdir", dir, "error", err.Error())
 		return err
 	}
 
-	fetchTemplateToPath(tpl.RemoteURL, tpl.LocalPathUnrendered)
+	err = fetchTemplateToPath(tpl.RemoteURL, tpl.LocalPathUnrendered)
+	if err != nil {
+		slog.Error("fetch template failed", "url", tpl.RemoteURL, "target", tpl.LocalPathUnrendered, "error", err.Error())
+	}
 
 	return nil
 }
 
-func fetchTemplateToPath(url, localPath string) {
+func fetchTemplateToPath(url, localPath string) error {
 	directory := filepath.Dir(localPath)
 
 	if err := os.MkdirAll(directory, os.ModePerm); err != nil {
-		fmt.Printf("Error creating directories: %v\n", err)
-		return
+		return err
 	}
 
 	fileName := filepath.Join(directory, filepath.Base(url))
 
+	absPath, _ := filepath.Abs(fileName)
+
 	if _, err := os.Stat(fileName); !os.IsNotExist(err) {
-		x, _ := filepath.Abs(fileName)
-		slog.Debug("file already exists, not refetching", "path", x)
+		slog.Debug("file already exists, not refetching", "path", absPath)
+		return nil
+
 	} else {
 		response, err := http.Get(url)
 		if err != nil {
-			fmt.Printf("Error fetching the file: %v\n", err)
-			return
+			return err
 		}
 		defer response.Body.Close()
 
 		file, err := os.Create(fileName)
 		if err != nil {
-			fmt.Printf("Error creating the file: %v\n", err)
-			return
+			return err
 		}
 		defer file.Close()
 
 		_, err = io.Copy(file, response.Body)
 		if err != nil {
-			fmt.Printf("Error saving the file: %v\n", err)
-			return
+			return err
 		}
 
-		x, _ := filepath.Abs(fileName)
-		slog.Debug("file saved", "path", x)
+		slog.Debug("file saved", "path", absPath)
 	}
+
+	return nil
 }
