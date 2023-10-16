@@ -46,6 +46,7 @@ func (tpl TxtarTemplate) GetUnRenderedTemplateDir() string {
 
 func (tpl TxtarTemplate) FetchIfNotFound() {
 	if mymazda.FileExists(tpl.LocalPathUnrendered) && durationSinceFileCreated(tpl.LocalPathUnrendered) < 24*time.Hour {
+		slog.Debug("skipped fetching file", "url", tpl.RemoteURL, "path", tpl.LocalPathUnrendered)
 		return
 	}
 
