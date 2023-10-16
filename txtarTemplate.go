@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
 	mymazda "github.com/taylormonacelli/forestfish/mymazda"
 )
@@ -44,10 +45,26 @@ func (tpl TxtarTemplate) GetUnRenderedTemplateDir() string {
 }
 
 func (tpl TxtarTemplate) FetchIfNotFound() {
-	if !mymazda.FileExists(tpl.LocalPathUnrendered) {
-		slog.Debug("fetching", "url", tpl.RemoteURL, "path", tpl.LocalPathUnrendered)
-		tpl.FetchRemoteToLocal()
+	if mymazda.FileExists(tpl.LocalPathUnrendered) && durationSinceFileCreated(tpl.LocalPathUnrendered) < 24*time.Hour {
+		return
 	}
+
+	slog.Debug("fetching", "url", tpl.RemoteURL, "path", tpl.LocalPathUnrendered)
+	tpl.FetchRemoteToLocal()
+}
+
+func durationSinceFileCreated(filePath string) time.Duration {
+	fileInfo, err := os.Stat(filePath)
+	if err != nil {
+		slog.Error("error getting file info", "path", filePath, "error", err.Error())
+		return 0
+	}
+
+	durationSince := time.Since(fileInfo.ModTime())
+
+	slog.Debug("duration since file was modified", "path", filePath, "duration", durationSince)
+
+	return durationSince
 }
 
 func (tpl TxtarTemplate) FetchRemoteToLocal() error {
