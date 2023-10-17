@@ -19,7 +19,7 @@ type TxtarTemplate struct {
 	LocalPathRendered   string
 }
 
-var baseDir = "/tmp/coalfoot"
+var baseDir = filepath.Join(os.TempDir(), "coalfoot")
 
 func NewTxtarTemplate() *TxtarTemplate {
 	fname := "1.txtar"
