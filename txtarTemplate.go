@@ -22,8 +22,8 @@ type TxtarTemplate struct {
 var baseDir = filepath.Join(os.TempDir(), "coalfoot")
 
 func NewTxtarTemplate() *TxtarTemplate {
-	fname := "1.txtar"
-	fnameRendered := "1-rendered.txt"
+	fname := "2.txtar"
+	fnameRendered := "2-rendered.txt"
 	url := fmt.Sprintf("https://raw.githubusercontent.com/taylormonacelli/navylie/master/templates/%s", fname)
 
 	return &TxtarTemplate{
