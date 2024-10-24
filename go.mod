@@ -1,11 +1,11 @@
 module github.com/taylormonacelli/coalfoot
 
-go 1.21
+go 1.22.0
 
 toolchain go1.23.2
 
 require (
 	github.com/taylormonacelli/forestfish v0.0.10
 	github.com/taylormonacelli/goldbug v0.0.6
-	golang.org/x/tools v0.14.0
+	golang.org/x/tools v0.26.0
 )
