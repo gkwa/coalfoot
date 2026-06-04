@@ -2,7 +2,7 @@ module github.com/taylormonacelli/coalfoot
 
 go 1.25.0
 
-toolchain go1.26.3
+toolchain go1.26.4
 
 require (
 	github.com/taylormonacelli/forestfish v0.0.10
