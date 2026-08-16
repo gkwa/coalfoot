@@ -7,5 +7,5 @@ toolchain go1.26.6
 require (
 	github.com/taylormonacelli/forestfish v0.0.10
 	github.com/taylormonacelli/goldbug v0.0.6
-	golang.org/x/tools v0.48.0
+	golang.org/x/tools v0.49.0
 )
